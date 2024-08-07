@@ -9,7 +9,7 @@ import java.util.List;
 public class Philosoph extends Thread{
 
 
-    private boolean isEat;//думает или ест
+    private boolean isEat;//думает или кушает
     private List<Philosoph> neighbor = new ArrayList<>();
     private final String name;
 
