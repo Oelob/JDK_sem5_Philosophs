@@ -10,8 +10,8 @@ public class Philosoph extends Thread{
 
 
     private boolean isEat;//думает или кушает
-    private List<Philosoph> neighbor = new ArrayList<>();
-    private final String name;
+    private List<Philosoph> neighbors = new ArrayList<>();//два соседа объекта
+    private String name;
 
 
     public Philosoph(String name) {
@@ -23,11 +23,37 @@ public class Philosoph extends Thread{
         return isEat;
     }
 
+   public String getPhilosophName(){
+        return this.name;
+   }
 
-    public void setNeighbor(List<Philosoph> neighbor, Philosoph philosoph) {
-        this.neighbor.add(philosoph);
+    /**
+     * Метод назначения соседа в случае двух участников
+     * @param philosoph
+     */
+    public void setNeighbor(Philosoph philosoph) {
+        this.neighbors.add(philosoph);
     }
 
+    /**
+     * Метод назначения соседа в случае участия более двух философов
+     * @param philosoph1
+     * @param philosoph2
+     */
+    public void setNeighbors(Philosoph philosoph1, Philosoph philosoph2) {
+        this.neighbors.add(philosoph1);
+        this.neighbors.add(philosoph2);
+    }
+
+    public String getNeighbors() {
+
+        String result = "";
+
+        for (Philosoph neighbor : neighbors) {
+            result += neighbor.getPhilosophName()+" ";
+        }
+        return result;
+    }
 
     @Override
     public void run() {
