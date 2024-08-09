@@ -5,6 +5,8 @@ package org.example;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class Dinner extends Thread{
@@ -37,7 +39,18 @@ public class Dinner extends Thread{
             }
         }
         for (Philosoph philosoph : philosophList) {
-            System.out.println("Neighbors for " + philosoph.getPhilosophName() + " is " + philosoph.getNeighbors());
+            System.out.println("Neighbors for " + philosoph.getPhilosophName() + " is " + philosoph.getNeighborsNames());
+        }
+    }
+
+    public synchronized void philosophsEating(Philosoph philosoph) throws InterruptedException {
+        Lock lock = new ReentrantLock();
+        while (!philosoph.getNeighbors().getFirst().getIsEat() && !philosoph.getNeighbors().getLast().getIsEat()) {
+            lock.lock();
+            System.out.println("Great philosoph " + philosoph.getPhilosophName() + " is eating");
+            philosoph.changeIsEat();
+            System.out.println("Great philosoph " + philosoph.getPhilosophName() + " is thinking");
+            lock.unlock();
         }
     }
 
@@ -45,15 +58,16 @@ public class Dinner extends Thread{
     @Override
     public void run() {
         this.philosophList = new ArrayList<>(Arrays.asList(
-                new Philosoph("Socrat"),
-                new Philosoph("Decart"),
-                new Philosoph("Aristotel"),
-                new Philosoph("Platon"),
-                new Philosoph("Seneca")
+                new Philosoph("Socrat", this, false),
+                new Philosoph("Decart", this, false),
+                new Philosoph("Aristotel", this,false),
+                new Philosoph("Platon", this, false),
+                new Philosoph("Seneca", this, false)
         ));
         neighbors();
-        for (Philosoph philosoph : philosophList) {
-            new Thread(philosoph).start();
+//        philosophList.getFirst().changeIsEat();
+        for (Philosoph ph: philosophList) {
+            new Thread(ph).start();
         }
 
     }
