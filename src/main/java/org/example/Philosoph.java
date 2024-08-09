@@ -3,7 +3,7 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.concurrent.Semaphore;
 
 
 public class Philosoph extends Thread{
@@ -12,15 +12,15 @@ public class Philosoph extends Thread{
     private List<Philosoph> neighbors = new ArrayList<>();//два соседа объекта
     private final String name;
     private final Dinner dinner;
+    Semaphore sem = new Semaphore(2);
 
 
-    public Philosoph(String name, Dinner dinner, boolean isEat) {
+    public Philosoph(String name, Dinner dinner, boolean isEat, Semaphore sem) {
         this.name = name;
         this.dinner = dinner;
         this.isEat = isEat;
+        this.sem = sem;
     }
-
-
 
    public String getPhilosophName(){
         return this.name;
@@ -58,6 +58,13 @@ public class Philosoph extends Thread{
         return this.neighbors;
     }
 
+    public boolean neigborsState(){
+        if (this.getNeighbors().getFirst().isEat == false && this.getNeighbors().getLast().isEat == false) {
+            return true;
+        }
+        else {return false;}
+    }
+
     public boolean getIsEat(){
         return this.isEat;
     }
@@ -66,7 +73,19 @@ public class Philosoph extends Thread{
         return this.isEat = !isEat;
     }
 
+    public void philosophsEating() throws InterruptedException {
+        if (this.neigborsState()) {
+            sem.acquire();
+            this.changeIsEat();
+            System.out.println("Great philosoph " + this.getPhilosophName() + " is eating");
+            this.changeIsEat();
+//            sleep(1000);
+            sem.release();
+        }
+        System.out.println("Great philosoph " + this.getPhilosophName() + " is thinking");
+        sleep(5000);
 
+    }
 
     @Override
     public void run() {
@@ -81,8 +100,13 @@ public class Philosoph extends Thread{
 //            System.out.println("Great philosoph " + this.name + " is thinking");
 //        }
 //        try {
+//        try {
+//            this.dinner.philosophsEating(this);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
         try {
-            this.dinner.philosophsEating(this);
+            philosophsEating();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

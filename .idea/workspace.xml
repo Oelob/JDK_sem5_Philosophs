@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0fa6093c-6e99-49be-902a-a875849fc7e8" name="Changes" comment="Добавил назначение соседей">
+    <list default="true" id="0fa6093c-6e99-49be-902a-a875849fc7e8" name="Changes" comment="Философы кушают поочереди">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Dinner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Dinner.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Philosoph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Philosoph.java" afterDir="false" />
@@ -111,7 +111,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723058832856</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Философы кушают поочереди">
+      <option name="closed" value="true" />
+      <created>1723193122768</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1723193122768</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -128,6 +136,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Создал философов и общий ужин" />
     <MESSAGE value="Добавил назначение соседей" />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавил назначение соседей" />
+    <MESSAGE value="Философы кушают поочереди" />
+    <option name="LAST_COMMIT_MESSAGE" value="Философы кушают поочереди" />
   </component>
 </project>
