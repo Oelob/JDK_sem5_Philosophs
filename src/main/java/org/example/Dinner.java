@@ -3,19 +3,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-
-public class Dinner extends Thread{
-
+public class Dinner {
     private List<Philosoph> philosophList;
-
-
     public Dinner() {
         this.philosophList = new ArrayList<>();
     }
-
     public void neighbors(){
         if (this.philosophList.size() == 2 ){
             philosophList.getFirst().setNeighbor(philosophList.getLast());
@@ -32,20 +24,18 @@ public class Dinner extends Thread{
         }
     }
 
-
-    @Override
     public void run() {
+        Semaphore sem = new Semaphore(2);
         this.philosophList = new ArrayList<>(Arrays.asList(
-                new Philosoph("Socrat", this, false, new Semaphore(2)),
-                new Philosoph("Decart", this, false, new Semaphore(2)),
-                new Philosoph("Aristotel", this,false, new Semaphore(2)),
-                new Philosoph("Platon", this, false, new Semaphore(2)),
-                new Philosoph("Seneca", this, false, new Semaphore(2))
+                new Philosoph("Socrat", this, false, sem),
+                new Philosoph("Decart", this, false, sem),
+                new Philosoph("Aristotel", this,false, sem),
+                new Philosoph("Platon", this, false, sem),
+                new Philosoph("Seneca", this, false, sem)
         ));
         neighbors();
         for (Philosoph ph: philosophList) {
             new Thread(ph).start();
         }
-
     }
 }

@@ -1,18 +1,17 @@
 package org.example;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicInteger;
 
-
-public class Philosoph extends Thread{
-
+public class Philosoph extends Thread {
     private boolean isEat;//думает или кушает
-    private List<Philosoph> neighbors = new ArrayList<>();//два соседа объекта
+    private final List<Philosoph> neighbors = new ArrayList<>();//два соседа объекта
     private final String name;
     private final Dinner dinner;
-    Semaphore sem = new Semaphore(2);
+    Semaphore sem;
+    private AtomicInteger COUNT_EATING = new AtomicInteger();
 
 
     public Philosoph(String name, Dinner dinner, boolean isEat, Semaphore sem) {
@@ -22,12 +21,13 @@ public class Philosoph extends Thread{
         this.sem = sem;
     }
 
-   public String getPhilosophName(){
+    public String getPhilosophName() {
         return this.name;
-   }
+    }
 
     /**
      * Метод назначения соседа в случае двух участников
+     *
      * @param philosoph
      */
     public void setNeighbor(Philosoph philosoph) {
@@ -36,6 +36,7 @@ public class Philosoph extends Thread{
 
     /**
      * Метод назначения соседа в случае участия более двух философов
+     *
      * @param philosoph1
      * @param philosoph2
      */
@@ -49,70 +50,49 @@ public class Philosoph extends Thread{
         String result = "";
 
         for (Philosoph neighbor : neighbors) {
-            result += neighbor.getPhilosophName()+" ";
+            result += neighbor.getPhilosophName() + " ";
         }
         return result;
     }
 
-    public List<Philosoph> getNeighbors(){
+    public List<Philosoph> getNeighbors() {
         return this.neighbors;
     }
 
-    public boolean neigborsState(){
-        if (this.getNeighbors().getFirst().isEat == false && this.getNeighbors().getLast().isEat == false) {
-            return true;
-        }
-        else {return false;}
-    }
-
-    public boolean getIsEat(){
-        return this.isEat;
-    }
-
-    public boolean changeIsEat(){
-        return this.isEat = !isEat;
+    public boolean neigborsState() {
+        return !this.getNeighbors().getFirst().isEat && !this.getNeighbors().getLast().isEat;
     }
 
     public void philosophsEating() throws InterruptedException {
-        if (this.neigborsState()) {
-            sem.acquire();
-            this.changeIsEat();
-            System.out.println("Great philosoph " + this.getPhilosophName() + " is eating");
-            this.changeIsEat();
-//            sleep(1000);
+        sem.acquire();
+        this.isEat = true;
+        if (!this.getNeighbors().getFirst().isEat && !this.getNeighbors().getLast().isEat) {
+            System.out.println("Great philosoph " + this.getPhilosophName() + " is eating "
+                    + COUNT_EATING.incrementAndGet() + " " + getNeighbors());
+            sleep(1000);
+            System.out.println("Great philosoph " + this.getPhilosophName() + " is thinking");
+            this.isEat = false;
+            sem.release();
+        }else {
+            isEat = false;
             sem.release();
         }
-        System.out.println("Great philosoph " + this.getPhilosophName() + " is thinking");
-        sleep(5000);
-
     }
-
     @Override
     public void run() {
-//        if(isEat) {
-//            System.out.println("Great philosoph " + this.name + " is eating");
-//            try {
-//                Thread.sleep(2000);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }else {
-//            System.out.println("Great philosoph " + this.name + " is thinking");
-//        }
-//        try {
-//        try {
-//            this.dinner.philosophsEating(this);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
         try {
-            philosophsEating();
+            while (COUNT_EATING.get()<3){
+                philosophsEating();
+            }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
     }
 
-
+    @Override
+    public String toString() {
+        return
+                "name='" + name + "\' " + isEat;
+    }
 }
 
