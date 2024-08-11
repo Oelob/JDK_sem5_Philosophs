@@ -9,14 +9,12 @@ public class Philosoph extends Thread {
     private boolean isEat;//думает или кушает
     private final List<Philosoph> neighbors = new ArrayList<>();//два соседа объекта
     private final String name;
-    private final Dinner dinner;
     Semaphore sem;
     private AtomicInteger COUNT_EATING = new AtomicInteger();
 
 
     public Philosoph(String name, Dinner dinner, boolean isEat, Semaphore sem) {
         this.name = name;
-        this.dinner = dinner;
         this.isEat = isEat;
         this.sem = sem;
     }
@@ -68,7 +66,7 @@ public class Philosoph extends Thread {
         this.isEat = true;
         if (!this.getNeighbors().getFirst().isEat && !this.getNeighbors().getLast().isEat) {
             System.out.println("Great philosoph " + this.getPhilosophName() + " is eating "
-                    + COUNT_EATING.incrementAndGet() + " " + getNeighbors());
+                    + COUNT_EATING.incrementAndGet() + " раз. " + " Eго соседи: " + getNeighbors());
             sleep(1000);
             System.out.println("Great philosoph " + this.getPhilosophName() + " is thinking");
             this.isEat = false;
@@ -92,7 +90,7 @@ public class Philosoph extends Thread {
     @Override
     public String toString() {
         return
-                "name='" + name + "\' " + isEat;
+                name + ". Статус поедания: " + isEat;
     }
 }
 
